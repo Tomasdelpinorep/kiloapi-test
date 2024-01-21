@@ -63,13 +63,16 @@ class AportacionServiceTests {
                 .detalleAportaciones(List.of(detalleBorrable))
                 .build();
 
-        aportacionService.borrarDetallesAportacion(aportacion);
-        tipoAlimentoSaveService.save(kilosDisponibles.getTipoAlimento());
+        when(aportacionRepository.findDetallesBorrables()).thenReturn(List.of(detalleBorrable));
 
-        System.out.println(t.getKilosDisponibles().getCantidadDisponible());
+
+        aportacionService.borrarDetallesAportacion(aportacion);
 
         assertEquals(110.0, t.getKilosDisponibles().getCantidadDisponible());
         assertTrue(aportacion.getDetalleAportaciones().isEmpty());
+
+        verify(tipoAlimentoSaveService).save(t);
+        verify(aportacionRepository).save(aportacion);
 
 
     }
