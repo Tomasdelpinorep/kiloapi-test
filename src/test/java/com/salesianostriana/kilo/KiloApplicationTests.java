@@ -14,9 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import java.util.Optional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -63,17 +63,55 @@ class KiloApplicationTests {
 				.detalleAportaciones(List.of(detalle))
 				.build();
 
+		detalle.setAportacion(aportacion);
+
 		when(tipoAlimentoSaveService.save(detalle.getTipoAlimento())).thenReturn(tipoAlimento);
 		when(aportacionRepository.save(detalle.getAportacion())).thenReturn(aportacion);
 
-		Optional<Aportacion> result = aportacionService.cambiarKilosDetalle(detalle, 15.0);//Result is always null :(
+		Optional<Aportacion> result = aportacionService.cambiarKilosDetalle(detalle, 15.0);
 
 		Assertions.assertEquals(15, result.get().getDetalleAportaciones().get(0).getCantidadKg());
 		Assertions.assertEquals(15,tipoAlimento.getKilosDisponibles().getCantidadDisponible());
 		Assertions.assertEquals(15, detalle.getCantidadKg());
 
 		verify(tipoAlimentoSaveService, times(1)).save(any(TipoAlimento.class));
+		verify(aportacionRepository, times(1)).save(any(Aportacion.class));
 
+	}
+
+	@Test
+	public void CambiarKilosDetalleResultLesserThan0Test() {
+
+		KilosDisponibles kilosDisponibles = KilosDisponibles.builder()
+				.cantidadDisponible(10d)
+				.build();
+
+		TipoAlimento tipoAlimento = TipoAlimento.builder()
+				.kilosDisponibles(kilosDisponibles)
+				.build();
+
+		DetalleAportacion detalle = DetalleAportacion.builder()
+				.tipoAlimento(tipoAlimento)
+				.cantidadKg(10)
+				.build();
+
+		Aportacion aportacion = Aportacion.builder()
+				.detalleAportaciones(List.of(detalle))
+				.build();
+
+		detalle.setAportacion(aportacion);
+
+		when(tipoAlimentoSaveService.save(detalle.getTipoAlimento())).thenReturn(tipoAlimento);
+		when(aportacionRepository.save(detalle.getAportacion())).thenReturn(aportacion);
+
+		Optional<Aportacion> result = aportacionService.cambiarKilosDetalle(detalle, 5.0);
+
+		Assertions.assertEquals(5, result.get().getDetalleAportaciones().get(0).getCantidadKg());
+		Assertions.assertEquals(5,tipoAlimento.getKilosDisponibles().getCantidadDisponible());
+		Assertions.assertEquals(5, detalle.getCantidadKg());
+
+		verify(tipoAlimentoSaveService, times(1)).save(any(TipoAlimento.class));
+		verify(aportacionRepository, times(1)).save(any(Aportacion.class));
 	}
 
 }
