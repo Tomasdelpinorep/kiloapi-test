@@ -1,4 +1,4 @@
-package com.salesianostriana.kilo;
+package com.salesianostriana.kilo.controllers;
 
 import com.salesianostriana.kilo.controllers.TipoAlimentoController;
 import com.salesianostriana.kilo.entities.DetalleAportacion;
@@ -6,6 +6,7 @@ import com.salesianostriana.kilo.entities.KilosDisponibles;
 import com.salesianostriana.kilo.entities.TipoAlimento;
 import com.salesianostriana.kilo.repositories.TipoAlimentoRepository;
 import com.salesianostriana.kilo.services.TipoAlimentoService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,14 +41,20 @@ public class TipoAlimentoControllerTests {
     @MockBean
     TipoAlimentoService tipoAlimentoService;
 
-    @Test
-    void getAlimentoById_ValidId_ReturnsTipoAlimentoDTO_Test() throws Exception {
-        TipoAlimento tipoAlimento = TipoAlimento.builder()
+    private TipoAlimento tipoAlimento;
+
+    @BeforeEach
+    void SetUp(){
+        tipoAlimento = TipoAlimento.builder()
                 .id(1L)
                 .kilosDisponibles(mock(KilosDisponibles.class))
                 .nombre("Legumbres")
                 .detalleAportaciones(List.of(mock(DetalleAportacion.class)))
                 .build();
+    }
+
+    @Test
+    void getAlimentoById_ValidId_ReturnsTipoAlimentoDTO_Test() throws Exception {
 
         when(tipoAlimentoService.findById(1L)).thenReturn(Optional.of(tipoAlimento));
 
@@ -56,6 +63,20 @@ public class TipoAlimentoControllerTests {
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.id", is(1)));
 
+    }
+
+    @Test
+    void getAlimentoById_InvalidId() throws Exception {
+        when(tipoAlimentoService.findById(1L)).thenReturn(Optional.empty());
+
+        mvc.perform(get("/tipoAlimento/{id}", 1L).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void editTipoAlimento_ValidId(){
+
+        when(tipoAlimento)
     }
 
 }
