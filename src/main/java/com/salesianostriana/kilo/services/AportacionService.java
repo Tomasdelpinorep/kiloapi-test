@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class AportacionService {
 
-    private AportacionRepository aportacionRepository;
-    private  TipoAlimentoSaveService tipoAlimentoSaveService;
+    private final AportacionRepository aportacionRepository;
+    private final  TipoAlimentoSaveService tipoAlimentoSaveService;
 
     private final ClaseService claseService;
 
@@ -214,7 +214,7 @@ public class AportacionService {
         }
 
     }
-
+/*
     public void setTipoAlimentoSaveService(TipoAlimentoSaveService tipoAlimentoSaveService) {
         this.tipoAlimentoSaveService = tipoAlimentoSaveService;
     }
@@ -222,4 +222,6 @@ public class AportacionService {
     public void setAportacionRepository(AportacionRepository aportacionRepository) {
         this.aportacionRepository = aportacionRepository;
     }
+    */
+
 }

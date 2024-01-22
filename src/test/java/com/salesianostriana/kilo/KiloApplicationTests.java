@@ -39,8 +39,8 @@ class KiloApplicationTests {
 		MockitoAnnotations.openMocks(this); // Initialize annotated mocks
 
 		// You need to set the mocked tipoAlimentoSaveService in the aportacionService
-		aportacionService.setTipoAlimentoSaveService(tipoAlimentoSaveService);
-		aportacionService.setAportacionRepository(aportacionRepository);
+//		aportacionService.setTipoAlimentoSaveService(tipoAlimentoSaveService);
+//		aportacionService.setAportacionRepository(aportacionRepository);
 	}
 
 	@Test
